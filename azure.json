@@ -1,0 +1,17 @@
+{
+  "hosting": [
+    {
+      "app": {
+        "project": "animatedUniverse",
+        "target": "build",
+        "configuration": "production",
+        "path": "dist/animatedUniverse"
+      },
+      "azureHosting": {
+        "subscription": "25920cf5-caa3-4aee-83cb-5b59b6ffcbf1",
+        "resourceGroupName": "animatedUniverse-static-deploy",
+        "account": "animateduniversestatic"
+      }
+    }
+  ]
+}
