@@ -1,7 +1,9 @@
 import {
   Component, OnInit, ViewChild,
   AfterViewInit,
-  Input
+  Input,
+  OnChanges,
+  SimpleChanges
 } from '@angular/core';
 
 import {
@@ -26,7 +28,7 @@ import {
   templateUrl: './universe.component.html',
   styleUrls: ['./universe.component.scss']
 })
-export class UniverseComponent implements OnInit, AfterViewInit {
+export class UniverseComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild("renderingCanvas", { static: false })
   private renderingCanvas;
 
@@ -34,13 +36,25 @@ export class UniverseComponent implements OnInit, AfterViewInit {
   @Input() snow: string;
   @Input() ground: string;
   @Input() wrap: string;
+  @Input() snowing: boolean;
 
   scene: Scene;
   engine: Engine;
-  
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (!changes.snowing.firstChange) {
+      this.snowing = changes.snowing.currentValue;
+      this.scene = this.createScene(this.renderingCanvas.nativeElement);
+
+      this.engine.runRenderLoop(() => {
+        this.scene.render();
+      });
+    }
   }
   ngAfterViewInit(): void {
     console.log(this.renderingCanvas);
@@ -124,33 +138,35 @@ export class UniverseComponent implements OnInit, AfterViewInit {
       scene
     );
 
-    // Create a particle system
-    const snowParticleSystem = new ParticleSystem("particles", 5000, scene);
+    if (this.snowing) {
+      // Create a particle system
+      const snowParticleSystem = new ParticleSystem("particles", 5000, scene);
 
-    // Texture of each particle
-    snowParticleSystem.particleTexture = new Texture(this.snow, scene);
+      // Texture of each particle
+      snowParticleSystem.particleTexture = new Texture(this.snow, scene);
 
-    // Where the particles come from
-    snowParticleSystem.emitter = new Vector3(0, 5, 0); // the starting object, the emitter
-    snowParticleSystem.minEmitBox = new Vector3(-50, -10, -50); // Starting all from
-    snowParticleSystem.maxEmitBox = new Vector3(50, 20, 50); // To...
+      // Where the particles come from
+      snowParticleSystem.emitter = new Vector3(0, 5, 0); // the starting object, the emitter
+      snowParticleSystem.minEmitBox = new Vector3(-50, -10, -50); // Starting all from
+      snowParticleSystem.maxEmitBox = new Vector3(50, 20, 50); // To...
 
-    // Size of each particle (random between...)
-    snowParticleSystem.minSize = 0.1;
-    snowParticleSystem.maxSize = 0.5;
+      // Size of each particle (random between...)
+      snowParticleSystem.minSize = 0.1;
+      snowParticleSystem.maxSize = 0.5;
 
-    // Color of each particle
-    snowParticleSystem.color1 = new Color4(0.38, 0.55, 1, 0.26);
-    snowParticleSystem.colorDead = new Color4(0, 0, 0, 0);
+      // Color of each particle
+      snowParticleSystem.color1 = new Color4(0.38, 0.55, 1, 0.26);
+      snowParticleSystem.colorDead = new Color4(0, 0, 0, 0);
 
-    // Particles emitted per second
-    snowParticleSystem.emitRate = 1000;
+      // Particles emitted per second
+      snowParticleSystem.emitRate = 1000;
 
-    // Set the gravity of all particles
-    snowParticleSystem.gravity = new Vector3(0, -10, 0);
+      // Set the gravity of all particles
+      snowParticleSystem.gravity = new Vector3(0, -10, 0);
 
-    // Start the particle system
-    snowParticleSystem.start();
+      // Start the particle system
+      snowParticleSystem.start();
+    }
 
     return scene;
   }
