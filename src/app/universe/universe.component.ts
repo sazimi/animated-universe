@@ -168,6 +168,11 @@ export class UniverseComponent implements OnInit, AfterViewInit, OnChanges {
       snowParticleSystem.start();
     }
 
+
+    // Enable VR
+    const VRHelper = scene.createDefaultVRExperience();
+	  VRHelper.enableTeleportation({floorMeshName: "ground"});
+
     return scene;
   }
 
