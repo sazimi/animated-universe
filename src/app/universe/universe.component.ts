@@ -20,7 +20,8 @@ import {
   Mesh,
   ParticleSystem,
   Color4,
-  CubeTexture
+  CubeTexture,
+  Camera
 } from "@babylonjs/core";
 
 @Component({
@@ -41,7 +42,9 @@ export class UniverseComponent implements OnInit, AfterViewInit, OnChanges {
   scene: Scene;
   engine: Engine;
 
-  constructor() { }
+  constructor() {
+
+  }
 
   ngOnInit() {
   }
@@ -56,8 +59,7 @@ export class UniverseComponent implements OnInit, AfterViewInit, OnChanges {
       });
     }
   }
-  ngAfterViewInit(): void {
-    console.log(this.renderingCanvas);
+  ngAfterViewInit() {
     this.scene = this.createScene(this.renderingCanvas.nativeElement);
 
     this.engine.runRenderLoop(() => {
@@ -72,7 +74,7 @@ export class UniverseComponent implements OnInit, AfterViewInit, OnChanges {
     const scene = new Scene(this.engine);
 
     // Create camera
-    // Parameters: alpha, beta, radius, target position, scene
+    //Parameters: alpha, beta, radius, target position, scene
     const camera = new ArcRotateCamera(
       "camera",
       0.3,
@@ -82,10 +84,13 @@ export class UniverseComponent implements OnInit, AfterViewInit, OnChanges {
       scene
     );
 
-    // This can be passed to component
-    //camera.setPosition(new Vector3(0, 0, 20));
+    // var camera = new Camera("camera1", new Vector3(0, -3, -5), scene);
 
-    camera.attachControl(canvas, true);
+
+    // This can be passed to component
+    camera.setPosition(new Vector3(0, 0, 20));
+
+    // camera.attachControl(canvas, true);
 
     // Create light
     const light = new HemisphericLight(
@@ -104,8 +109,8 @@ export class UniverseComponent implements OnInit, AfterViewInit, OnChanges {
     // Use CreateGroundFromHeightMap to create a height map of 200 units by 200
     // units, with 250 subdivisions in each of the `x` and `z` directions, for a
     // total of 62,500 divisions.
-    const ground = Mesh.CreateGroundFromHeightMap(
-      "ground",
+    const planet = Mesh.CreateGroundFromHeightMap(
+      "planet",
       this.ground,
       80,
       80,
@@ -115,7 +120,7 @@ export class UniverseComponent implements OnInit, AfterViewInit, OnChanges {
       scene,
       false
     );
-    ground.material = groundMaterial;
+    planet.material = groundMaterial;
 
     // Create giftwrap
     const wrapping = new StandardMaterial("wrapping", scene);
@@ -171,7 +176,9 @@ export class UniverseComponent implements OnInit, AfterViewInit, OnChanges {
 
     // Enable VR
     const VRHelper = scene.createDefaultVRExperience();
-	  VRHelper.enableTeleportation({floorMeshName: "ground"});
+
+
+    VRHelper.enableTeleportation({ floorMeshName: "planet" });
 
     return scene;
   }
