@@ -8,9 +8,9 @@
         "path": "dist/animatedUniverse"
       },
       "azureHosting": {
-        "subscription": "25920cf5-caa3-4aee-83cb-5b59b6ffcbf1",
-        "resourceGroupName": "animatedUniverse-static-deploy",
-        "account": "animateduniversestatic"
+        "subscription": "68960f4c-8fa8-4ea9-95f4-41426dea5d5b",
+        "resourceGroupName": "webvr",
+        "account": ""
       }
     }
   ]
